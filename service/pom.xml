@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.gmail.vitaliapetsenak</groupId>
+        <artifactId>shop.app</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <groupId>com.gmail.vitaliapetsenak</groupId>
+    <artifactId>service</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <name>service</name>
+    <packaging>jar</packaging>
+    <url>http://maven.apache.org</url>
+    <dependencies>
+        <dependency>
+            <groupId>com.gmail.vitaliapetsenak</groupId>
+            <artifactId>repository</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+</project>
