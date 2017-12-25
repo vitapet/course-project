@@ -8,10 +8,11 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
-@Table(name = "T_GOODS")
-public class Goods implements Serializable {
+@Table(name = "T_PRODUCTS")
+public class Product implements Serializable {
 
-    private static final long serialVersionUID = 3104101270954409581L;
+    private static final long serialVersionUID = 112729334855701439L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "F_ID")
@@ -25,22 +26,22 @@ public class Goods implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "F_CATEGORY")
-    private GoodsCategory category;
+    private ProductCategory category;
 
     @Column(name = "F_COUNT")
-    private Long count;
+    private Integer count;
 
     @Column(name = "F_PRICE")
     private BigDecimal price;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "F_STATUS")
-    private GoodsStatus status;
+    private ProductStatus status;
 
-    @ManyToMany(mappedBy = "goodsSet")
-    private Set<Order> orders = new HashSet<>();
+    @OneToMany(mappedBy = "primaryKey.product", cascade = CascadeType.ALL)
+    private Set<OrderProduct> orderProducts = new HashSet<>();
 
-    public Goods() {
+    public Product() {
     }
 
     public Long getId() {
@@ -67,19 +68,19 @@ public class Goods implements Serializable {
         this.description = description;
     }
 
-    public GoodsCategory getCategory() {
+    public ProductCategory getCategory() {
         return category;
     }
 
-    public void setCategory(GoodsCategory category) {
+    public void setCategory(ProductCategory category) {
         this.category = category;
     }
 
-    public Long getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
@@ -91,34 +92,38 @@ public class Goods implements Serializable {
         this.price = price;
     }
 
-    public GoodsStatus getStatus() {
+    public ProductStatus getStatus() {
         return status;
     }
 
-    public void setStatus(GoodsStatus status) {
+    public void setStatus(ProductStatus status) {
         this.status = status;
     }
 
-    public Set<Order> getOrders() {
-        return orders;
+    public Set<OrderProduct> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setOrders(Set<Order> orders) {
-        this.orders = orders;
+    public void setOrderProducts(Set<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        this.orderProducts.add(orderProduct);
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Goods goods = (Goods) o;
-        return Objects.equals(id, goods.id) &&
-                Objects.equals(name, goods.name) &&
-                Objects.equals(description, goods.description) &&
-                category == goods.category &&
-                Objects.equals(count, goods.count) &&
-                Objects.equals(price, goods.price) &&
-                status == goods.status;
+        Product product = (Product) o;
+        return Objects.equals(id, product.id) &&
+                Objects.equals(name, product.name) &&
+                Objects.equals(description, product.description) &&
+                category == product.category &&
+                Objects.equals(count, product.count) &&
+                Objects.equals(price, product.price) &&
+                status == product.status;
     }
 
     @Override
@@ -129,7 +134,7 @@ public class Goods implements Serializable {
 
     @Override
     public String toString() {
-        return "Goods{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

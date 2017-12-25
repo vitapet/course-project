@@ -2,7 +2,7 @@ package com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -18,25 +18,20 @@ public class Order implements Serializable {
     @Column(name = "F_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "F_USER_ID")
     private User user;
 
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "F_TIMESTAMP")
-    private Timestamp timestamp;
+    private Date timestamp;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "F_STATUS")
     private OrderStatus status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "order")
-    private Set<Purchase> purchases = new HashSet<>();
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "t_orders_goods",
-            joinColumns = {@JoinColumn(referencedColumnName = "F_ID")},
-            inverseJoinColumns = {@JoinColumn(referencedColumnName = "F_ID")})
-    private Set<Goods> goodsSet = new HashSet<>();
+    @OneToMany(mappedBy = "primaryKey.order", cascade = CascadeType.ALL)
+    private Set<OrderProduct> orderProducts = new HashSet<>();
 
     public Order() {
     }
@@ -57,11 +52,11 @@ public class Order implements Serializable {
         this.user = user;
     }
 
-    public Timestamp getTimestamp() {
+    public Date getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -73,20 +68,16 @@ public class Order implements Serializable {
         this.status = status;
     }
 
-    public Set<Purchase> getPurchases() {
-        return purchases;
+    public Set<OrderProduct> getOrderProducts() {
+        return orderProducts;
     }
 
-    public void setPurchases(Set<Purchase> purchases) {
-        this.purchases = purchases;
+    public void setOrderProducts(Set<OrderProduct> orderProducts) {
+        this.orderProducts = orderProducts;
     }
 
-    public Set<Goods> getGoodsSet() {
-        return goodsSet;
-    }
-
-    public void setGoodsSet(Set<Goods> goodsSet) {
-        this.goodsSet = goodsSet;
+    public void addOrderProduct(OrderProduct orderProduct) {
+        this.orderProducts.add(orderProduct);
     }
 
     @Override

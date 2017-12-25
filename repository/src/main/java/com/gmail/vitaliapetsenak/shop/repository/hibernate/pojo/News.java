@@ -107,6 +107,10 @@ public class News implements Serializable {
         this.comments = comments;
     }
 
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

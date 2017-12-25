@@ -6,19 +6,17 @@
     <session-factory>
         <property name="connection.url">jdbc:mysql://localhost:3306/shop</property>
         <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="connection.username">root</property>
-        <property name="connection.password">123</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</property>
         <property name="show_sql">true</property>
         <property name="connection.pool_size">10</property>
-
-        <!-- DB schema will be updated if needed -->
         <property name="hbm2ddl.auto">validate</property>
+        <property name="hibernate.current_session_context_class">thread</property>
+
         <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.User"/>
         <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.News"/>
-        <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Goods"/>
+        <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Product"/>
         <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Comment"/>
-        <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Purchase"/>
+        <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.OrderProduct"/>
         <mapping class="com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Order"/>
     </session-factory>
 </hibernate-configuration>
