@@ -1,4 +1,6 @@
-package com.gmail.vitaliapetsenak.shop.repository.hibernate.dao;
+package com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.interfaces;
+
+import org.hibernate.Session;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,5 +14,7 @@ public interface GenericDAO<T extends Serializable, PK extends Serializable> {
 
     void update(T entity);
 
-    void delete(PK id);
+    void delete(T entity);
+
+    Session getSession();
 }

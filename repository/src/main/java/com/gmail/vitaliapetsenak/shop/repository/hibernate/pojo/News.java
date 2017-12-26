@@ -18,7 +18,7 @@ public class News implements Serializable {
     @Column(name = "F_ID")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     @JoinColumn(name = "F_USER_ID")
     private User user;
 
@@ -37,7 +37,7 @@ public class News implements Serializable {
     @Column(name = "F_IMAGE")
     private String image;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "news")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "news", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Comment> comments = new HashSet<>();
 
     public News() {

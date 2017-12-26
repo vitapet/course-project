@@ -62,13 +62,13 @@ public class User implements Serializable {
     @Column(name = "F_STATUS")
     private UserStatus status;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REFRESH)
     private Set<News> news = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.REFRESH)
     private Set<Comment> comments = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Order> orders = new HashSet<>();
 
     public User() {
@@ -219,7 +219,7 @@ public class User implements Serializable {
     }
 
     public Set<Order> getOrders() {
-        return orders;
+        return this.orders;
     }
 
     public void setOrders(Set<Order> orders) {
@@ -228,6 +228,10 @@ public class User implements Serializable {
 
     public void addOrder(Order order) {
         this.orders.add(order);
+    }
+
+    public Set<Order> returnOrders() {
+        return this.orders;
     }
 
     @Override

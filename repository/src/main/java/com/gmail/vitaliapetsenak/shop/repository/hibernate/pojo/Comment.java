@@ -23,7 +23,7 @@ public class Comment implements Serializable {
     @JoinColumn(name = "F_USER_ID")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "F_NEWS_ID")
     private News news;
 

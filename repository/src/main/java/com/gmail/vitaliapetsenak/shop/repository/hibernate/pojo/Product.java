@@ -38,7 +38,12 @@ public class Product implements Serializable {
     @Column(name = "F_STATUS")
     private ProductStatus status;
 
-    @OneToMany(mappedBy = "primaryKey.product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "primaryKey.product", cascade = CascadeType.REFRESH)
+//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "primaryKey.product")
+//    @JoinTable(name = "t_orders_products",
+//            joinColumns = {@JoinColumn(name = "F_PRODUCT_ID")},
+//            inverseJoinColumns = {@JoinColumn(name = "F_ORDER_ID")}
+//    )
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
     public Product() {
