@@ -1,23 +1,22 @@
 package com.gmail.vitaliapetsenak.shop.service.hibernate.impl;
 
-import com.gmail.vitaliapetsenak.shop.repository.dao.GoodsDAOImpl;
-import com.gmail.vitaliapetsenak.shop.repository.dao.interfaces.GoodsInterface;
-import com.gmail.vitaliapetsenak.shop.repository.model.Goods;
-import com.gmail.vitaliapetsenak.shop.repository.model.GoodsIsDeleted;
-import com.gmail.vitaliapetsenak.shop.service.converter.Converter;
-import com.gmail.vitaliapetsenak.shop.service.model.CategoryDTO;
-import com.gmail.vitaliapetsenak.shop.service.model.GoodsDTO;
-import com.gmail.vitaliapetsenak.shop.service.model.GoodsIsDeletedDTO;
-import com.gmail.vitaliapetsenak.shop.service.model.PurchasesDTO;
+
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.ProductDAO;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.interfaces.ProductInterface;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Product;
+import com.gmail.vitaliapetsenak.shop.service.hibernate.ProductService;
+import com.gmail.vitaliapetsenak.shop.service.hibernate.converter.Converter;
+import com.gmail.vitaliapetsenak.shop.service.hibernate.model.ProductCategoryDTO;
+import com.gmail.vitaliapetsenak.shop.service.hibernate.model.ProductDTO;
+import com.gmail.vitaliapetsenak.shop.service.hibernate.model.ProductStatusDTO;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProductServiceImpl {
+public class ProductServiceImpl implements ProductService {
 
     private static volatile ProductServiceImpl instance;
-    private GoodsInterface goodsDAO = GoodsDAOImpl.getInstance();
-    private OrderServiceImpl purchasesService = OrderServiceImpl.getInstance();
+    private ProductInterface productDAO = ProductDAO.getInstance();
 
     private ProductServiceImpl() {
     }
@@ -29,70 +28,88 @@ public class ProductServiceImpl {
         return instance;
     }
 
-    public List<GoodsDTO> getAllGoods() {
-        List<GoodsDTO> goodsDTOList = new ArrayList<>();
-        List<Goods> goodsList = goodsDAO.readAll();
-        for (Goods goods : goodsList) {
-            goodsDTOList.add(new GoodsDTO(goods));
+    @Override
+    public List<ProductDTO> getAll() {
+        productDAO.getSession().beginTransaction();
+        List<Product> products = productDAO.findAll();
+        List<ProductDTO> dtoList = getProductDTOList(products);
+        productDAO.getSession().getTransaction().commit();
+        return dtoList;
+    }
+
+    @Override
+    public List<ProductDTO> getAllNotDeleted() {
+        productDAO.getSession().beginTransaction();
+        List<Product> products = productDAO.getNotDeleted();
+        List<ProductDTO> dtoList = getProductDTOList(products);
+        productDAO.getSession().getTransaction().commit();
+        return dtoList;
+    }
+
+    @Override
+    public List<ProductDTO> getAllByCategory(ProductCategoryDTO category) {
+        productDAO.getSession().beginTransaction();
+        List<ProductDTO> dtoList = getProductDTOS(category, null);
+        productDAO.getSession().getTransaction().commit();
+        return dtoList;
+    }
+
+    @Override
+    public List<ProductDTO> getAllNotDeletedByCategory(ProductCategoryDTO category) {
+        productDAO.getSession().beginTransaction();
+        List<ProductDTO> dtoList = getProductDTOS(category, ProductStatusDTO.NOT_DELETED);
+        productDAO.getSession().getTransaction().commit();
+        return dtoList;
+    }
+
+    @Override
+    public Long add(ProductDTO productDTO) {
+        productDAO.getSession().beginTransaction();
+        Product product = getProductFromDTO(productDTO);
+        productDAO.create(product);
+        productDAO.getSession().getTransaction().commit();
+        return product.getId();
+    }
+
+    @Override
+    public void delete(ProductDTO productDTO) {
+        productDAO.getSession().beginTransaction();
+        Product product = getProductFromDTO(productDTO);
+        product.setId(productDTO.getId());
+        productDAO.delete(product);
+        productDAO.getSession().getTransaction().commit();
+    }
+
+    @Override
+    public void update(ProductDTO productDTO) {
+        productDAO.getSession().beginTransaction();
+        Product product = getProductFromDTO(productDTO);
+        product.setId(productDTO.getId());
+        productDAO.update(product);
+        productDAO.getSession().getTransaction().commit();
+    }
+
+    private List<ProductDTO> getProductDTOList(List<Product> products) {
+        List<ProductDTO> dtoList = new ArrayList<>();
+        for (Product product : products) {
+            dtoList.add(new ProductDTO(product));
         }
-        return goodsDTOList;
+        return dtoList;
     }
 
-    public GoodsDTO getGoods(Long id) {
-        Goods goods = goodsDAO.readById(id);
-        if (goods != null) {
-            return new GoodsDTO(goods);
-        }
-        return null;
-    }
-
-    public void addGoods(GoodsDTO goodsDTO) {
-        Goods goods = Goods.newBuilder().build();
-        Converter.convert(goodsDTO, goods);
-        goodsDAO.create(goods);
-    }
-
-    public void updateGoodsInfo(GoodsDTO goodsDTO) {
-        Goods goods = goodsDAO.readById(goodsDTO.getId());
-        Converter.convert(goodsDTO, goods);
-        goodsDAO.update(goods);
-    }
-
-    public void deleteGoods(Long id) {
-        List<PurchasesDTO> purchases = purchasesService.getByGoods(id);
-        if (purchases.isEmpty()) {
-            goodsDAO.delete(id);
+    private List<ProductDTO> getProductDTOS(ProductCategoryDTO category, ProductStatusDTO status) {
+        List<Product> products = null;
+        if (status != null) {
+            products = productDAO.getByCategory(category.getCategory(), status.getStatus());
         } else {
-            Goods goods = goodsDAO.readById(id);
-            goods.setIsDeleted(GoodsIsDeleted.DELETED);
-            goodsDAO.update(goods);
+            products = productDAO.getByCategory(category.getCategory());
         }
+        return getProductDTOList(products);
     }
 
-    public List<GoodsDTO> getByCategoryIsDeleted(CategoryDTO category, GoodsIsDeletedDTO isDeleted) {
-        List<GoodsDTO> goodsDTOList = new ArrayList<>();
-        List<Goods> goodsList = goodsDAO.getByCategory(category.getCategory(), isDeleted.getIsDeleted());
-        for (Goods goods : goodsList) {
-            goodsDTOList.add(new GoodsDTO(goods));
-        }
-        return goodsDTOList;
-    }
-
-    public List<GoodsDTO> getAllByCategory(CategoryDTO category) {
-        List<GoodsDTO> goodsDTOList = new ArrayList<>();
-        List<Goods> goodsList = goodsDAO.getByCategory(category.getCategory());
-        for (Goods goods : goodsList) {
-            goodsDTOList.add(new GoodsDTO(goods));
-        }
-        return goodsDTOList;
-    }
-
-    public List<GoodsDTO> getAllNotDeletedGoods() {
-        List<GoodsDTO> goodsDTOList = new ArrayList<>();
-        List<Goods> goodsList = goodsDAO.getNotDeleted();
-        for (Goods goods : goodsList) {
-            goodsDTOList.add(new GoodsDTO(goods));
-        }
-        return goodsDTOList;
+    private Product getProductFromDTO(ProductDTO productDTO) {
+        Product product = new Product();
+        Converter.convert(productDTO, product);
+        return product;
     }
 }

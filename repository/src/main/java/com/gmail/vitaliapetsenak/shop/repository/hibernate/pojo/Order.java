@@ -31,10 +31,6 @@ public class Order implements Serializable {
     private OrderStatus status;
 
     @OneToMany(mappedBy = "primaryKey.order", cascade = CascadeType.ALL)
-//    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "primaryKey.order")
-//    @JoinTable(name = "t_orders_products",
-//            joinColumns = @JoinColumn(name = "F_ORDER_ID"),
-//            inverseJoinColumns = @JoinColumn(name = "F_PRODUCT_ID"))
     private Set<OrderProduct> orderProducts = new HashSet<>();
 
     public Order() {

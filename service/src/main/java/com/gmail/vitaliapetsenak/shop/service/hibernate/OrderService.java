@@ -7,6 +7,8 @@ import java.util.List;
 public interface OrderService {
     List<OrderDTO> getAll();
 
+    List<OrderDTO> getAllByUserId(Long userId);
+
     OrderDTO getById(Long id);
 
     Long add(OrderDTO orderDTO);

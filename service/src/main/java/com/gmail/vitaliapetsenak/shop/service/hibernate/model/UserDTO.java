@@ -1,9 +1,12 @@
 package com.gmail.vitaliapetsenak.shop.service.hibernate.model;
 
 
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Order;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.User;
 
 import java.sql.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserDTO {
     private Long id;
@@ -21,6 +24,8 @@ public class UserDTO {
     private Integer block;
     private Integer apartment;
     private UserStatusDTO status;
+
+    private Set<OrderDTO> orders;
 
     public UserDTO(User user) {
         this(newBuilder()
@@ -62,6 +67,22 @@ public class UserDTO {
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public Set<OrderDTO> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<OrderDTO> orders) {
+        this.orders = orders;
+    }
+
+    public void setOrdersFromPojo(Set<Order> orders) {
+        Set<OrderDTO> dtos = new HashSet<>();
+        for (Order order : orders) {
+            dtos.add(new OrderDTO(order));
+        }
+        this.orders = dtos;
     }
 
     public UserStatusDTO getStatus() {

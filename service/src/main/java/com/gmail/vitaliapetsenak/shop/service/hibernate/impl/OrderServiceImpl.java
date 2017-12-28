@@ -1,8 +1,11 @@
 package com.gmail.vitaliapetsenak.shop.service.hibernate.impl;
 
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.OrderDAO;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.UserDAO;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.interfaces.OrderInterface;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.interfaces.UserInterface;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.Order;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.User;
 import com.gmail.vitaliapetsenak.shop.service.hibernate.OrderService;
 import com.gmail.vitaliapetsenak.shop.service.hibernate.converter.Converter;
 import com.gmail.vitaliapetsenak.shop.service.hibernate.model.OrderDTO;
@@ -14,6 +17,7 @@ import java.util.List;
 public class OrderServiceImpl implements OrderService {
     private static volatile OrderServiceImpl instance;
     private OrderInterface orderDAO = OrderDAO.getInstance();
+    private UserInterface userDAO = UserDAO.getInstance();
 
     private OrderServiceImpl() {
     }
@@ -35,6 +39,19 @@ public class OrderServiceImpl implements OrderService {
         }
         orderDAO.getSession().getTransaction().commit();
         return dtos;
+    }
+
+    @Override
+    public List<OrderDTO> getAllByUserId(Long userId) {
+        orderDAO.getSession().beginTransaction();
+        User user = userDAO.findById(userId);
+        Hibernate.initialize(user.getOrders());
+        List<OrderDTO> orders = new ArrayList<>();
+        for (Order order : user.getOrders()) {
+            orders.add(new OrderDTO(order));
+        }
+        orderDAO.getSession().getTransaction().commit();
+        return orders;
     }
 
     @Override

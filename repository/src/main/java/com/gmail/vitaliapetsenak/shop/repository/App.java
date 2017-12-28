@@ -4,6 +4,7 @@ import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.OrderDAO;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.ProductDAO;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.dao.impl.UserDAO;
 import com.gmail.vitaliapetsenak.shop.repository.hibernate.pojo.*;
+import com.gmail.vitaliapetsenak.shop.repository.hibernate.util.HibernateUtil;
 import org.hibernate.Hibernate;
 
 import java.sql.Timestamp;
@@ -34,10 +35,11 @@ public class App {
         order.setTimestamp(Timestamp.valueOf(LocalDateTime.now()));
         order.setUser(user);
         order.addOrderProduct(new OrderProduct(new OrderProductId(order, product), 1));
-        user.getOrders().add(order);
-//        orderDAO.create(order);
+//        user.getOrders().add(order);
+        orderDAO.create(order);
+        System.out.println(order);
         orderDAO.commitTransaction();
-
+        System.out.println(order);
         userDAO.beginTransaction();
         user = userDAO.findById(6L);
 //        afterAdd.addAll(user.getOrders());
@@ -97,6 +99,6 @@ public class App {
 ////        System.out.println(order);
 //        System.out.println("after delete" + user.getOrders());
 
-
+        HibernateUtil.getSessionFactory().close();
     }
 }

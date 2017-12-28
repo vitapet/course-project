@@ -18,7 +18,7 @@ public class News implements Serializable {
     @Column(name = "F_ID")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.REFRESH)
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "F_USER_ID")
     private User user;
 
