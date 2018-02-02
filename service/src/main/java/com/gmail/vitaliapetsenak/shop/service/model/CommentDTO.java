@@ -1,23 +1,27 @@
 package com.gmail.vitaliapetsenak.shop.service.model;
 
+
 import com.gmail.vitaliapetsenak.shop.repository.model.Comment;
 
-import java.sql.Timestamp;
+import javax.validation.constraints.Pattern;
 
 public class CommentDTO {
     private Long id;
+    @Pattern(regexp = "^[a-zA-Z0-9.\\s]{1,250}$",message = "Invalid comment\'s length.")
     private String text;
     private UserDTO user;
-    private NewsDTO news;
-    private Timestamp date;
+    private Long newsId;
+    private String timestamp;
+
+    public CommentDTO() {
+    }
 
     public CommentDTO(Comment comment) {
         this(newBuilder()
                 .id(comment.getId())
                 .text(comment.getText())
                 .user(new UserDTO(comment.getUser()))
-                .news(new NewsDTO(comment.getNews()))
-                .date(comment.getDate())
+                .newsId(comment.getNews().getId())
         );
     }
 
@@ -25,8 +29,8 @@ public class CommentDTO {
         setId(builder.id);
         setText(builder.text);
         setUser(builder.user);
-        setNews(builder.news);
-        setDate(builder.date);
+        setNewsId(builder.newsId);
+        setTimestamp(builder.timestamp);
     }
 
     public static Builder newBuilder() {
@@ -57,28 +61,28 @@ public class CommentDTO {
         this.user = user;
     }
 
-    public NewsDTO getNews() {
-        return news;
+    public Long getNewsId() {
+        return newsId;
     }
 
-    public void setNews(NewsDTO news) {
-        this.news = news;
+    public void setNewsId(Long newsId) {
+        this.newsId = newsId;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
     public static final class Builder {
         private long id;
         private String text;
         private UserDTO user;
-        private NewsDTO news;
-        private Timestamp date;
+        private Long newsId;
+        private String timestamp;
 
         private Builder() {
         }
@@ -98,13 +102,13 @@ public class CommentDTO {
             return this;
         }
 
-        public Builder news(NewsDTO news) {
-            this.news = news;
+        public Builder newsId(Long newsId) {
+            this.newsId = newsId;
             return this;
         }
 
-        public Builder date(Timestamp date) {
-            this.date = date;
+        public Builder timestamp(String timestamp) {
+            this.timestamp = timestamp;
             return this;
         }
 
@@ -119,8 +123,8 @@ public class CommentDTO {
                 "id=" + id +
                 ", text='" + text + '\'' +
                 ", user=" + user +
-                ", news=" + news +
-                ", date=" + date +
+                ", newsId=" + newsId +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }

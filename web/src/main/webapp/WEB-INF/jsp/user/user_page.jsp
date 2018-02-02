@@ -10,14 +10,15 @@
     <jsp:include page="../res/cart.jsp"/>
 </header>
 <br>
-<a href="${pageContext.request.contextPath}/user/catalog">Catalog</a>
-<a href="${pageContext.request.contextPath}/user/info">Personal Information</a>
+<c:set var="category" value="all"/>
+<a href="${pageContext.request.contextPath}/user/catalog/<c:out value="${category}"/>">Catalog</a>
+<a href="<c:url value="/user/info"/>">Personal Information</a>
 <br><br>
 <p>Новости</p>
 <c:forEach items="${newsList}" var="news">
     <c:set var="tempNews" value="${news}" scope="request"/>
     <jsp:include page="../res/news_only_header.jsp"/>
-    <a href="${pageContext.request.contextPath}/user/news?id=${news.id}">Подробнее</a><br>
+    <a href="user/news/<c:out value="${news.id}"/>">Подробнее</a><br>
     <br>
 </c:forEach>
 </body>

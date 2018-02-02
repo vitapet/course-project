@@ -17,13 +17,13 @@
 <p>Пользователи</p>
 <form action="${pageContext.request.contextPath}/root/users" method="post">
     <c:forEach items="${users}" var="userObj">
-        <input type="radio" name="id" value="${userObj.id}">
         <label>Логин:&nbsp;</label><c:out value="${userObj.login}"/><br>
         <label>Роль:&nbsp;</label><c:out value="${userObj.role}"/><br>
         <label>Статус:&nbsp;</label><c:out value="${userObj.status}"/><br>
-        <a href="${pageContext.request.contextPath}/root/users/update?id=${userObj.id}">Изменить</a><br>
+        <a href="${pageContext.request.contextPath}/root/users/<c:out value="${userObj.id}"/>/edit">Edit</a>
+        <a href="${pageContext.request.contextPath}/root/users/<c:out value="${userObj.id}"/>/block">Block</a>
+        <a href="${pageContext.request.contextPath}/root/users/<c:out value="${userObj.id}"/>/delete">Delete</a><br><br>
     </c:forEach>
-    <button type="submit">Delete</button>
 </form>
 </body>
 </html>

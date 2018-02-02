@@ -1,5 +1,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html>
 <head>
@@ -17,30 +18,46 @@
     <c:remove var="message" scope="session"/>
 </c:if>
 <br>
-<p>${categoryName}</p>
-
-<c:forEach items="${categories}" var="category">
-    <a name="id" href="${pageContext.request.contextPath}/user/catalog?name=${category.category}"><c:out
-            value="${category.category}"/></a>
-</c:forEach>
-<a name="id" href="${pageContext.request.contextPath}/user/catalog?name=all">All</a><br>
-<c:choose>
-    <c:when test="${empty listGoods}">
-        <p>There are no goods at this category.</p>
-    </c:when>
-    <c:otherwise>
-        <c:forEach items="${listGoods}" var="goods">
-            <c:set var="tempGoods" value="${goods}" scope="request"/>
-            <%--<input type="radio" name="id" value="<c:out value="${goods.id}"/>">--%>
-            <jsp:include page="../res/goods_info.jsp"/>
-            <form action="${pageContext.request.contextPath}/user/catalog" method="post">
-                <input type="hidden" name="id" value="${goods.id}">
-                <button type="submit">Add to cart</button>
-            </form>
-            <br>
-            <br>
-        </c:forEach>
-    </c:otherwise>
-</c:choose>
+<p>${curCategory}</p>
+<form:form method="post" modelAttribute="searchForm">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+        </tr>
+        <tr>
+            <td><form:input path="name"/></td>
+            <td><form:input path="price"/></td>
+            <td>
+                <button type="submit">Search</button>
+            </td>
+        </tr>
+    </table>
+    <c:forEach items="${categories}" var="category">
+        <a name="id" href="${pageContext.request.contextPath}/user/catalog/<c:out value="${category}"/>"><c:out
+                value="${category}"/></a>
+    </c:forEach>
+    <c:set var="categoryAll" value="all"/>
+    <a name="id" href="${pageContext.request.contextPath}/user/catalog/<c:out value="${categoryAll}"/>">All</a><br>
+    <c:choose>
+        <c:when test="${empty products}">
+            <p>There are no goods at this category.</p>
+        </c:when>
+        <c:otherwise>
+            <c:forEach items="${products}" var="product">
+                <c:set var="tempProduct" value="${product}" scope="request"/>
+                <jsp:include page="../res/product_info.jsp"/>
+                <%--<form action="${pageContext.request.contextPath}/user/catalog/cart/add" method="post">--%>
+                <%--<input type="hidden" name="productId" value="<c:out value="${product.id}"/>"/>--%>
+                <%--<input type="hidden" name="curCategory" value="<c:out value="${curCategory}"/>"/>--%>
+                <%--<button type="submit">Add to cart</button>--%>
+                <%--</form>--%>
+                <a name="id" href="${pageContext.request.contextPath}/user/catalog/cart/add/<c:out value="${curCategory}"/>/<c:out value="${product.id}"/>">Add to cart</a><br>
+                <br>
+                <br>
+            </c:forEach>
+        </c:otherwise>
+    </c:choose>
+</form:form>
 </body>
 </html>

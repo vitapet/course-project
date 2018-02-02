@@ -1,44 +1,45 @@
 package com.gmail.vitaliapetsenak.shop.service.model;
 
-import com.gmail.vitaliapetsenak.shop.repository.model.User;
 
-import java.sql.Date;
+import com.gmail.vitaliapetsenak.shop.repository.model.User;
+import com.gmail.vitaliapetsenak.shop.repository.model.UserRole;
+import com.gmail.vitaliapetsenak.shop.repository.model.UserStatus;
+
+import java.util.List;
 
 public class UserDTO {
     private Long id;
     private String login;
     private String password;
-    private RoleDTO role;
+    private UserRole role;
     private String firstName;
     private String surname;
-    private Date birthDate;
+    private String birthDate;
     private String phone;
     private String country;
     private String city;
     private String street;
     private String house;
-    private Integer block;
-    private Integer apartment;
-    private UserStatusDTO status;
+    private String block;
+    private String apartment;
+    private UserStatus status;
+    private String passwordCheck;
+
+    private List<OrderDTO> orders;
+
+    public UserDTO() {
+    }
 
     public UserDTO(User user) {
         this(newBuilder()
                 .id(user.getId())
                 .login(user.getLogin())
-                .password(user.getPassword())
-                .role(RoleDTO.valueOf(user.getRole().toString()))
-                .firstName(user.getFirstName())
-                .surname(user.getSurname())
-                .birthDate(user.getBirthDate())
-                .phone(user.getPhone())
-                .country(user.getCountry())
-                .city(user.getCity())
-                .street(user.getStreet())
-                .house(user.getHouse())
-                .block(user.getBlock())
-                .apartment(user.getApartment())
-                .status(UserStatusDTO.valueOf(user.getStatus().toString()))
+                .firstName(user.getUserInfo().getFirstName())
+                .surname(user.getUserInfo().getSurname())
+                .status(UserStatus.valueOf(user.getStatus().toString()))
+
         );
+        setPasswordCheck(user.getPassword());
     }
 
     private UserDTO(Builder builder) {
@@ -57,17 +58,42 @@ public class UserDTO {
         setBlock(builder.block);
         setApartment(builder.apartment);
         setStatus(builder.status);
+        setPasswordCheck(getPassword());
     }
 
     public static Builder newBuilder() {
         return new Builder();
     }
 
-    public UserStatusDTO getStatus() {
+    public String getPasswordCheck() {
+        return passwordCheck;
+    }
+
+    public void setPasswordCheck(String passwordCheck) {
+        this.passwordCheck = passwordCheck;
+    }
+
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
+    public List<OrderDTO> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderDTO> orders) {
+        this.orders = orders;
+    }
+
+    public UserStatus getStatus() {
         return status;
     }
 
-    public void setStatus(UserStatusDTO status) {
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
 
@@ -95,14 +121,6 @@ public class UserDTO {
         this.password = password;
     }
 
-    public RoleDTO getRole() {
-        return role;
-    }
-
-    public void setRole(RoleDTO role) {
-        this.role = role;
-    }
-
     public String getFirstName() {
         return firstName;
     }
@@ -119,11 +137,11 @@ public class UserDTO {
         this.surname = surname;
     }
 
-    public Date getBirthDate() {
+    public String getBirthDate() {
         return birthDate;
     }
 
-    public void setBirthDate(Date birthDate) {
+    public void setBirthDate(String birthDate) {
         this.birthDate = birthDate;
     }
 
@@ -167,19 +185,19 @@ public class UserDTO {
         this.house = house;
     }
 
-    public Integer getBlock() {
+    public String getBlock() {
         return block;
     }
 
-    public void setBlock(Integer block) {
+    public void setBlock(String block) {
         this.block = block;
     }
 
-    public Integer getApartment() {
+    public String getApartment() {
         return apartment;
     }
 
-    public void setApartment(Integer apartment) {
+    public void setApartment(String apartment) {
         this.apartment = apartment;
     }
 
@@ -187,20 +205,21 @@ public class UserDTO {
         private long id;
         private String login;
         private String password;
-        private RoleDTO role;
+        private UserRole role;
         private String firstName;
         private String surname;
-        private Date birthDate;
+        private String birthDate;
         private String phone;
         private String country;
         private String city;
         private String street;
         private String house;
-        private int block;
-        private int apartment;
-        private UserStatusDTO status;
+        private String block;
+        private String apartment;
+        private UserStatus status;
 
         private Builder() {
+            super();
 
         }
 
@@ -209,7 +228,7 @@ public class UserDTO {
             return this;
         }
 
-        public Builder status(UserStatusDTO status) {
+        public Builder status(UserStatus status) {
             this.status = status;
             return this;
         }
@@ -224,7 +243,7 @@ public class UserDTO {
             return this;
         }
 
-        public Builder role(RoleDTO role) {
+        public Builder role(UserRole role) {
             this.role = role;
             return this;
         }
@@ -239,7 +258,7 @@ public class UserDTO {
             return this;
         }
 
-        public Builder birthDate(Date birthDate) {
+        public Builder birthDate(String birthDate) {
             this.birthDate = birthDate;
             return this;
         }
@@ -269,12 +288,12 @@ public class UserDTO {
             return this;
         }
 
-        public Builder block(int block) {
+        public Builder block(String block) {
             this.block = block;
             return this;
         }
 
-        public Builder apartment(int apartment) {
+        public Builder apartment(String apartment) {
             this.apartment = apartment;
             return this;
         }
@@ -301,6 +320,7 @@ public class UserDTO {
                 ", house='" + house + '\'' +
                 ", block=" + block +
                 ", apartment=" + apartment +
+                ", status=" + status +
                 '}';
     }
 }

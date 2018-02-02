@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 
 <html>
@@ -9,15 +10,8 @@
 <header>
     <jsp:include page="../res/menu.jsp"/>
 </header>
-<a href="${pageContext.request.contextPath}/root/news">Return</a><br>
-<form action="${pageContext.request.contextPath}/root/news/add" method="post" enctype="multipart/form-data">
-    <label>Фото:&nbsp;</label><input name="picture" type="file" required alt="Loading..."><br>
-    <label>Дата публикации:&nbsp;</label><input type="text" required name="date"><br>
-    <label>Заголовок:&nbsp;</label><input type="text" required name="name"><br>
-    <label>Текст новости:&nbsp;</label><input type="text" required name="description"><br>
-    <label>Автор:&nbsp;</label><input type="text" required name="author"><br>
-    <button type="submit">Save</button>
-    <a href="${pageContext.request.contextPath}/root/news">Return</a><br>
-</form>
+<c:set var="attrUrl" value="${url}" scope="request"/>
+<a href="${pageContext.request.contextPath}/${attrUrl}/news">Return</a><br>
+<jsp:include page="../res/admin_news_input_form.jsp"/>
 </body>
 </html>

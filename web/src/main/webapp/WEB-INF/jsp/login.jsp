@@ -1,21 +1,35 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
-
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <html>
 <head>
     <title>Login</title>
 </head>
 <body>
-<a href="${pageContext.request.contextPath}/">Return</a><br>
-<p><c:out value="${error}"/></p>
-<c:remove var="error" scope="session"/>
-<form action="${pageContext.request.contextPath}/login" method="post">
-    <label for="login">Login</label>
-    <input type="text" id="login" value="<c:out value="${loginObject.login}"/>" name="login" placeholder="Login"><br>
-    <label for="password">Password</label>
-    <input type="password" id="password" value="<c:out value="${loginObject.password}"/>" name="password"
-           placeholder="Password"><br>
-    <button type="submit">Login</button>
-</form>
+<a href="${pageContext.request.contextPath}/"><spring:message code="button.return"/></a><br/>
+<c:if test="${error}">
+    <p>Invalid credentials.</p>
+</c:if>
+<c:remove var="error" scope="request"/>
+<%--@elvariable id="user" type="com.gmail.vitaliapetsenak.shop.service.model.UserDTO"--%>
+<form:form method="post" modelAttribute="user">
+    <table>
+        <form:errors path="login"/>
+        <tr>
+            <td><form:label path="login"><spring:message code="login.username"/></form:label></td>
+            <td><form:input path="login"/></td>
+        </tr>
+        <tr>
+            <td><form:label path="password"><spring:message code="login.password"/></form:label></td>
+            <td><form:password path="password"/></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="<spring:message code="button.login"/>"/>
+            </td>
+        </tr>
+    </table>
+</form:form>
 </body>
 </html>

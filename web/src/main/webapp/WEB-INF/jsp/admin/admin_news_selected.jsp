@@ -8,33 +8,17 @@
 <header>
     <jsp:include page="../res/menu.jsp"/>
 </header>
-<a href="${pageContext.request.contextPath}/admin/news">Return</a><br>
+<c:set var="attrUrl" value="${url}" scope="request"/>
+<a href="${pageContext.request.contextPath}/${attrUrl}/news">Return</a><br>
 <c:if test="${not empty message}">
     <p><c:out value="${message}"/></p>
     <c:remove var="message" scope="session"/>
 </c:if>
 <br>
-<a href="${pageContext.request.contextPath}/admin/news/update?id=${news.id}">Update</a><br>
-<img src="${pageContext.request.contextPath}/image?name=${news.image}" name="track${news.id}"
-     alt="Loading ${news.image}" width="600" height="400"><br>
-<label>Дата публикации:&nbsp;</label><c:out value="${news.timestamp}"/><br>
-<c:out value="${news.name}"/><br>
-<c:out value="${news.description}"/><br>
-<label>Автор:&nbsp;</label><c:out value="${news.user.firstName}"/>&nbsp;<c:out
-        value="${news.user.surname}"/><br>
-<br>
-<form action="${pageContext.request.contextPath}/admin/news/selected" method="post">
-    <input type="hidden" name="newsId" value="${news.id}">
-    <p>Комментарии</p>
-    <c:forEach items="${comments}" var="comment">
-        <input type="radio" name="id" value="<c:out value="${comment.id}"/>">
-        <c:out value="${comment.user.login}"/>&nbsp;
-        <c:out value="${comment.date}"/><br>
-        <c:out value="${comment.text}"/><br><br>
-    </c:forEach>
-    <c:if test="${not empty comments}">
-        <button type="submit">Delete</button>
-    </c:if>
+<a href="${pageContext.request.contextPath}/${attrUrl}/news/<c:out value="${newsObj.id}"/>/edit">Update</a><br>
+<form action="${pageContext.request.contextPath}/${attrUrl}/news/<c:out value="${newsObj.id}"/>/delete" method="post">
+    <button type="submit">Delete</button>
 </form>
+<jsp:include page="../res/admin_news_with_comments.jsp"/>
 </body>
 </html>

@@ -1,24 +1,40 @@
 package com.gmail.vitaliapetsenak.shop.repository.model;
 
-import java.sql.Timestamp;
+import org.springframework.format.annotation.DateTimeFormat;
 
-public class Comment {
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Objects;
+
+@Entity
+@Table(name = "T_COMMENTS")
+public class Comment implements Serializable {
+
+    private static final long serialVersionUID = 7670502767925202704L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "F_ID")
     private Long id;
+
+    @Column(name = "F_TEXT")
     private String text;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "F_USER_ID")
     private User user;
+
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "F_NEWS_ID")
     private News news;
-    private Timestamp date;
 
-    private Comment(Builder builder) {
-        setId(builder.id);
-        setText(builder.text);
-        setUser(builder.user);
-        setNews(builder.news);
-        setDate(builder.date);
-    }
+    @Column(name = "F_TIMESTAMP")
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date timestamp;
 
-    public static Builder newBuilder() {
-        return new Builder();
+    public Comment() {
     }
 
     public Long getId() {
@@ -53,52 +69,30 @@ public class Comment {
         this.news = news;
     }
 
-    public Timestamp getDate() {
-        return date;
+    public Date getTimestamp() {
+        return timestamp;
     }
 
-    public void setDate(Timestamp date) {
-        this.date = date;
+    public void setTimestamp(Date timestamp) {
+        this.timestamp = timestamp;
     }
 
-    public static final class Builder {
-        private long id;
-        private String text;
-        private User user;
-        private News news;
-        private Timestamp date;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Comment comment = (Comment) o;
+        return Objects.equals(id, comment.id) &&
+                Objects.equals(text, comment.text) &&
+                Objects.equals(user, comment.user) &&
+                Objects.equals(news, comment.news) &&
+                Objects.equals(timestamp, comment.timestamp);
+    }
 
-        private Builder() {
-        }
+    @Override
+    public int hashCode() {
 
-        public Builder id(long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder text(String text) {
-            this.text = text;
-            return this;
-        }
-
-        public Builder user(User user) {
-            this.user = user;
-            return this;
-        }
-
-        public Builder news(News news) {
-            this.news = news;
-            return this;
-        }
-
-        public Builder date(Timestamp date) {
-            this.date = date;
-            return this;
-        }
-
-        public Comment build() {
-            return new Comment(this);
-        }
+        return Objects.hash(id, text, user, news, timestamp);
     }
 
     @Override
@@ -108,7 +102,7 @@ public class Comment {
                 ", text='" + text + '\'' +
                 ", user=" + user +
                 ", news=" + news +
-                ", date=" + date +
+                ", timestamp=" + timestamp +
                 '}';
     }
 }

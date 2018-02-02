@@ -1,44 +1,49 @@
 package com.gmail.vitaliapetsenak.shop.repository.model;
 
-import java.sql.Date;
 
-public class User {
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+@Entity
+@Table(name = "T_USERS")
+public class User implements Serializable {
+    private static final long serialVersionUID = 6466433850636063538L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "F_ID")
     private Long id;
+
+    @Column(name = "F_LOGIN")
     private String login;
+
+    @Column(name = "F_PASSWORD")
     private String password;
-    private Role role;
-    private String firstName;
-    private String surname;
-    private Date birthDate;
-    private String phone;
-    private String country;
-    private String city;
-    private String street;
-    private String house;
-    private Integer block;
-    private Integer apartment;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "F_ROLE")
+    private UserRole role;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "user")
+    private UserInfo userInfo;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "F_STATUS")
     private UserStatus status;
 
-    private User(Builder builder) {
-        setId(builder.id);
-        setLogin(builder.login);
-        setPassword(builder.password);
-        setRole(builder.role);
-        setFirstName(builder.firstName);
-        setSurname(builder.surname);
-        setBirthDate(builder.birthDate);
-        setPhone(builder.phone);
-        setCountry(builder.country);
-        setCity(builder.city);
-        setStreet(builder.street);
-        setHouse(builder.house);
-        setBlock(builder.block);
-        setApartment(builder.apartment);
-        setStatus(builder.status);
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<News> news = new ArrayList<>();
 
-    public static Builder newBuilder() {
-        return new Builder();
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
+
+    public User() {
     }
 
     public Long getId() {
@@ -47,14 +52,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public UserStatus getStatus() {
-        return status;
-    }
-
-    public void setStatus(UserStatus status) {
-        this.status = status;
     }
 
     public String getLogin() {
@@ -73,193 +70,79 @@ public class User {
         this.password = password;
     }
 
-    public Role getRole() {
+    public UserRole getRole() {
         return role;
     }
 
-    public void setRole(Role role) {
+    public void setRole(UserRole role) {
         this.role = role;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public UserStatus getStatus() {
+        return status;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setStatus(UserStatus status) {
+        this.status = status;
     }
 
-    public String getSurname() {
-        return surname;
+    public List<News> getNews() {
+        return news;
     }
 
-    public void setSurname(String surname) {
-        this.surname = surname;
+    public void setNews(List<News> news) {
+        this.news = news;
     }
 
-    public Date getBirthDate() {
-        return birthDate;
+    public List<Comment> getComments() {
+        return comments;
     }
 
-    public void setBirthDate(Date birthDate) {
-        this.birthDate = birthDate;
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
     }
 
-    public String getPhone() {
-        return phone;
+    public List<Order> getOrders() {
+        return orders;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setOrders(List<Order> orders) {
+        this.orders = orders;
     }
 
-    public String getCountry() {
-        return country;
+    public void addNews(News news) {
+        this.news.add(news);
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void addComment(Comment comment) {
+        this.comments.add(comment);
     }
 
-    public String getCity() {
-        return city;
+    public void addOrder(Order order) {
+        this.orders.add(order);
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 
-    public String getStreet() {
-        return street;
+    public void setUserInfo(UserInfo userInfo) {
+        this.userInfo = userInfo;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+        User user = (User) o;
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getLogin(), user.getLogin());
     }
 
-    public String getHouse() {
-        return house;
-    }
+    @Override
+    public int hashCode() {
 
-    public void setHouse(String house) {
-        this.house = house;
-    }
-
-    public Integer getBlock() {
-        return block;
-    }
-
-    public void setBlock(Integer block) {
-        this.block = block;
-    }
-
-    public Integer getApartment() {
-        return apartment;
-    }
-
-    public void setApartment(Integer apartment) {
-        this.apartment = apartment;
-    }
-
-    public static final class Builder {
-        private long id;
-        private String login;
-        private String password;
-        private Role role;
-        private String firstName;
-        private String surname;
-        private Date birthDate;
-        private String phone;
-        private String country;
-        private String city;
-        private String street;
-        private String house;
-        private int block;
-        private int apartment;
-        private UserStatus status;
-
-        private Builder() {
-
-        }
-
-        public Builder id(long id) {
-            this.id = id;
-            return this;
-        }
-
-        public Builder status(UserStatus status) {
-            this.status = status;
-            return this;
-        }
-
-        public Builder login(String login) {
-            this.login = login;
-            return this;
-        }
-
-        public Builder password(String password) {
-            this.password = password;
-            return this;
-        }
-
-        public Builder role(Role role) {
-            this.role = role;
-            return this;
-        }
-
-        public Builder firstName(String firstName) {
-            this.firstName = firstName;
-            return this;
-        }
-
-        public Builder surname(String surname) {
-            this.surname = surname;
-            return this;
-        }
-
-        public Builder birthDate(Date birthDate) {
-            this.birthDate = birthDate;
-            return this;
-        }
-
-        public Builder phone(String phone) {
-            this.phone = phone;
-            return this;
-        }
-
-        public Builder country(String country) {
-            this.country = country;
-            return this;
-        }
-
-        public Builder city(String city) {
-            this.city = city;
-            return this;
-        }
-
-        public Builder street(String street) {
-            this.street = street;
-            return this;
-        }
-
-        public Builder house(String house) {
-            this.house = house;
-            return this;
-        }
-
-        public Builder block(int block) {
-            this.block = block;
-            return this;
-        }
-
-        public Builder apartment(int apartment) {
-            this.apartment = apartment;
-            return this;
-        }
-
-        public User build() {
-            return new User(this);
-        }
+        return Objects.hash(getId(), getLogin(), getPassword(), getRole(), getUserInfo(), getStatus());
     }
 
     @Override
@@ -269,16 +152,8 @@ public class User {
                 ", login='" + login + '\'' +
                 ", password='" + password + '\'' +
                 ", role=" + role +
-                ", firstName='" + firstName + '\'' +
-                ", surname='" + surname + '\'' +
-                ", birthDate=" + birthDate +
-                ", phone='" + phone + '\'' +
-                ", country='" + country + '\'' +
-                ", city='" + city + '\'' +
-                ", street='" + street + '\'' +
-                ", house='" + house + '\'' +
-                ", block=" + block +
-                ", apartment=" + apartment +
+                ", userInfo=" + userInfo +
+                ", status=" + status +
                 '}';
     }
 }

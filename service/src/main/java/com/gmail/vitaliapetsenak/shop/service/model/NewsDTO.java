@@ -1,17 +1,20 @@
 package com.gmail.vitaliapetsenak.shop.service.model;
 
+
 import com.gmail.vitaliapetsenak.shop.repository.model.News;
 
-import java.sql.Timestamp;
+import java.util.List;
 
 public class NewsDTO {
+
     private Long id;
     private UserDTO user;
     private String author;
     private String name;
     private String description;
-    private Timestamp timestamp;
-    private String image;
+    private String timestamp;
+    private Long fileId;
+    private List<CommentDTO> comments;
 
     public NewsDTO(News news) {
         this(newBuilder()
@@ -20,8 +23,7 @@ public class NewsDTO {
                 .author(news.getAuthor())
                 .name(news.getName())
                 .description(news.getDescription())
-                .timestamp(news.getTimestamp())
-                .image(news.getImage())
+                .fileId(news.getId())
         );
     }
 
@@ -32,11 +34,19 @@ public class NewsDTO {
         setName(builder.name);
         setDescription(builder.description);
         setTimestamp(builder.timestamp);
-        setImage(builder.image);
+        setFileId(builder.fileId);
     }
 
     public static Builder newBuilder() {
         return new Builder();
+    }
+
+    public List<CommentDTO> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentDTO> comments) {
+        this.comments = comments;
     }
 
     public String getAuthor() {
@@ -47,12 +57,12 @@ public class NewsDTO {
         this.author = author;
     }
 
-    public String getImage() {
-        return image;
+    public Long getFileId() {
+        return fileId;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setFileId(Long fileId) {
+        this.fileId = fileId;
     }
 
     public Long getId() {
@@ -79,11 +89,11 @@ public class NewsDTO {
         this.description = description;
     }
 
-    public Timestamp getTimestamp() {
+    public String getTimestamp() {
         return timestamp;
     }
 
-    public void setTimestamp(Timestamp timestamp) {
+    public void setTimestamp(String timestamp) {
         this.timestamp = timestamp;
     }
 
@@ -96,13 +106,13 @@ public class NewsDTO {
     }
 
     public static final class Builder {
-        private long id;
+        private Long id;
         private UserDTO user;
         private String author;
         private String name;
         private String description;
-        private Timestamp timestamp;
-        private String image;
+        private String timestamp;
+        private Long fileId;
 
         public Builder id(long id) {
             this.id = id;
@@ -114,8 +124,8 @@ public class NewsDTO {
             return this;
         }
 
-        public Builder image(String image) {
-            this.image = image;
+        public Builder fileId(Long fileId) {
+            this.fileId = fileId;
             return this;
         }
 
@@ -134,7 +144,7 @@ public class NewsDTO {
             return this;
         }
 
-        public Builder timestamp(Timestamp timestamp) {
+        public Builder timestamp(String timestamp) {
             this.timestamp = timestamp;
             return this;
         }
@@ -149,10 +159,11 @@ public class NewsDTO {
         return "NewsDTO{" +
                 "id=" + id +
                 ", user=" + user +
+                ", author='" + author + '\'' +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", timestamp=" + timestamp +
-                ", image='" + image + '\'' +
+                ", fileId=" + fileId +
                 '}';
     }
 }

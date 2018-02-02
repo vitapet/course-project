@@ -1,4 +1,5 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" isELIgnored="false" %>
 <html>
 <head>
@@ -9,10 +10,11 @@
     <jsp:include page="../res/menu.jsp"/>
 </header>
 <br>
-<a href="${pageContext.request.contextPath}/root/catalog">Catalog</a>
+<c:set var="category" value="all"/>
+<a href="${pageContext.request.contextPath}/root/catalog/<c:out value="${category}"/>">Catalog</a>
 <a href="${pageContext.request.contextPath}/root/news">News</a>
+<a href="${pageContext.request.contextPath}/root/orders">Orders</a>
 <a href="${pageContext.request.contextPath}/root/users">Users</a>
-<a href="${pageContext.request.contextPath}/root/purchases">Purchases</a>
 <br><br>
 </body>
 </html>
