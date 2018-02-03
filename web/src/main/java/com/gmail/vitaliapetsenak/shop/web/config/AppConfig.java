@@ -11,8 +11,7 @@ import org.springframework.context.annotation.PropertySource;
 @PropertySource(value = {
         "classpath:database.properties",
         "classpath:news_file.properties",
-        "classpath:messages.properties",
-        "classpath:view_messages.properties"
+        "classpath:messages.properties"
 })
 @Import({
         HibernateConfig.class,

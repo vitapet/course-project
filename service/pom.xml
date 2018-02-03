@@ -14,11 +14,30 @@
     <name>service</name>
     <packaging>jar</packaging>
     <url>http://maven.apache.org</url>
+    <properties>
+        <javax.validation.version>2.0.1.Final</javax.validation.version>
+        <spring-version>4.3.10.RELEASE</spring-version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.gmail.vitaliapetsenak</groupId>
             <artifactId>repository</artifactId>
             <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-tx</artifactId>
+            <version>${spring-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-orm</artifactId>
+            <version>${spring-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>${javax.validation.version}</version>
         </dependency>
     </dependencies>
 </project>
