@@ -3,6 +3,7 @@ package com.gmail.vitaliapetsenak.shop.service.converter;
 import com.gmail.vitaliapetsenak.shop.repository.model.OrderProduct;
 import com.gmail.vitaliapetsenak.shop.service.model.OrderDTO;
 import com.gmail.vitaliapetsenak.shop.service.model.OrderProductDTO;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import java.util.List;
 
 @Component
 public class OrderProductConverter {
+    private final static Logger logger = Logger.getLogger(OrderProductConverter.class);
     @Autowired
     private OrderConverter orderConverter;
 
@@ -20,21 +22,21 @@ public class OrderProductConverter {
 
     public OrderProduct convert(OrderProductDTO orderProductDTO) {
         OrderProduct orderProduct = new OrderProduct();
-        if (orderProductDTO.getOrder() != null) {
-            try {
+        try {
+            if (orderProductDTO.getOrder() != null) {
                 orderProduct.setOrder(orderConverter.convert(orderProductDTO.getOrder()));
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
-        }
-        if (orderProductDTO.getProduct() != null) {
-            orderProduct.setProduct(productConverter.convert(orderProductDTO.getProduct()));
-        }
-        if (orderProductDTO.getCount() != null) {
-            orderProduct.setCount(orderProductDTO.getCount());
-        }
-        if (orderProductDTO.getAmount() != null) {
-            orderProduct.setAmount(orderProductDTO.getAmount());
+            if (orderProductDTO.getProduct() != null) {
+                orderProduct.setProduct(productConverter.convert(orderProductDTO.getProduct()));
+            }
+            if (orderProductDTO.getCount() != null) {
+                orderProduct.setCount(orderProductDTO.getCount());
+            }
+            if (orderProductDTO.getAmount() != null) {
+                orderProduct.setAmount(orderProductDTO.getAmount());
+            }
+        } catch (ParseException e) {
+            logger.error(e.getMessage(), e);
         }
         return orderProduct;
     }
